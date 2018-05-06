@@ -10,11 +10,11 @@ import UIKit
 import AVFoundation
 import Photos
 
-class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
-
+class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
-
+    
+    
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var previewView: UIView!
     @IBOutlet var deleteVideoButton: UIButton!
@@ -27,7 +27,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     var playbackLayer: AVPlayerLayer?
     var videoPlayer: AVPlayer?
     
-    var isPlayingVideo = false
+    var viewState = CurrentViewState.idle
     var currentVideoURL:URL?
     
     var fileManager = FileManager.default
@@ -48,7 +48,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         super.viewDidAppear(animated)
         previewLayer?.frame = previewView.bounds
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -84,7 +84,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
                 session.addOutput(videoOutput)
             }
             
-
+            
             session.startRunning()
             
             
@@ -108,7 +108,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         
         videoPlayer?.play()
         currentVideoURL = url
-        self.deleteVideoButton.isHidden = false
+        
         
         NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: videoPlayer?.currentItem, queue: .main) { _ in
             self.videoPlayer?.seek(to: kCMTimeZero)
@@ -127,27 +127,31 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             
             try fileManager.removeItem(at: currentVideoURL!)
             NSLog("Successfully deleted current video")
+            
         } catch let error as NSError {
             
             NSLog(error.localizedDescription)
             
         }
         
-        self.isPlayingVideo = false
-        self.deleteVideoButton.isHidden = true
+        viewState = .idle
+        updateButtons()
     }
-
+    
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error != nil {
             NSLog("FileOutput: \(error?.localizedDescription)")
         } else {
             self.previewVideo(url: outputFileURL)
-            self.isPlayingVideo = true
+            self.viewState = .playing
+            updateButtons()
         }
     }
     
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
         NSLog("Started recording to \(fileURL)")
+        viewState = .recording
+        updateButtons()
     }
     
     
@@ -157,13 +161,19 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         if !videoOutput.isRecording {
             
             let outputFileName = NSUUID().uuidString
-            let outputFilePath = (NSTemporaryDirectory() as NSString).appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
-            videoOutput.startRecording(to: URL(fileURLWithPath: outputFilePath), recordingDelegate: self)
+            let documentsPath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+            let outputFilePath = documentsPath.appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
+            videoOutput.startRecording(to: outputFilePath, recordingDelegate: self)
             
-        } else {
-            videoOutput.stopRecording()
         }
         
+        if viewState == .playing {
+            playbackLayer?.removeFromSuperlayer()
+            videoPlayer?.pause()
+            viewState = .idle
+        }
+        
+        updateButtons()
         NSLog("Start recording (TouchDown)")
     }
     
@@ -171,12 +181,44 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     @IBAction func cancelRecording(_ sender: Any) {
         NSLog("Cancel recording (TouchUpOutside)")
         videoOutput.stopRecording()
+        updateButtons()
     }
     
     //TouchUpInside
     @IBAction func stopRecording(_ sender: Any) {
         NSLog("Stop recording (TouchUpInside)")
         videoOutput.stopRecording()
+        updateButtons()
+    }
+    
+    func updateButtons() {
+        
+        let recButtonColor = #colorLiteral(red: 1, green: 0.03442570571, blue: 0.4200517621, alpha: 0.7982662671)
+        let idleButtonColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.6981752997)
+        let saveButtonColor = #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 0.6973726455)
+        
+        let recButtonTitle = ""
+        let idleButtonTitle = ""
+        let saveButtonTitle = "SALVAR"
+        
+        switch viewState {
+            
+        case .idle:
+            self.cameraButton.backgroundColor = idleButtonColor
+            self.cameraButton.setTitle(idleButtonTitle, for: .normal)
+            self.deleteVideoButton.isHidden = true
+            
+        case .recording:
+            self.cameraButton.backgroundColor = recButtonColor
+            self.cameraButton.setTitle(recButtonTitle, for: .highlighted)
+            self.deleteVideoButton.isHidden = true
+            
+        case .playing:
+            self.cameraButton.backgroundColor = saveButtonColor
+            self.cameraButton.setTitle(saveButtonTitle, for: .normal)
+            self.deleteVideoButton.isHidden = false
+        }
+        
     }
     
     func requestAccess() {
@@ -201,6 +243,12 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
             }
         }
         
+    }
+    
+    enum CurrentViewState {
+        case idle
+        case recording
+        case playing
     }
     
     
