@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8684C4C3209F852E003FCA36 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C4C2209F852E003FCA36 /* PreviewView.swift */; };
 		86E2F505209DFEC70003E128 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E2F504209DFEC70003E128 /* AppDelegate.swift */; };
 		86E2F507209DFEC70003E128 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86E2F506209DFEC70003E128 /* ViewController.swift */; };
 		86E2F50A209DFEC70003E128 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 86E2F508209DFEC70003E128 /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8684C4C2209F852E003FCA36 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		86E2F501209DFEC70003E128 /* Video Recorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Video Recorder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		86E2F504209DFEC70003E128 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		86E2F506209DFEC70003E128 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				86E2F504209DFEC70003E128 /* AppDelegate.swift */,
 				86E2F506209DFEC70003E128 /* ViewController.swift */,
 				86E2F508209DFEC70003E128 /* Main.storyboard */,
+				8684C4C2209F852E003FCA36 /* PreviewView.swift */,
 				86E2F50E209DFEC80003E128 /* Assets.xcassets */,
 				86E2F510209DFEC80003E128 /* LaunchScreen.storyboard */,
 				86E2F513209DFEC80003E128 /* Info.plist */,
@@ -139,6 +142,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				86E2F50D209DFEC70003E128 /* Video_Recorder.xcdatamodeld in Sources */,
+				8684C4C3209F852E003FCA36 /* PreviewView.swift in Sources */,
 				86E2F507209DFEC70003E128 /* ViewController.swift in Sources */,
 				86E2F505209DFEC70003E128 /* AppDelegate.swift in Sources */,
 			);

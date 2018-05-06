@@ -50,20 +50,37 @@
                                     <action selector="stopRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xC1-ys-ETb"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1S-zJ-UJv">
+                                <rect key="frame" x="20" y="50" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="9IU-se-PeM"/>
+                                    <constraint firstAttribute="width" constant="50" id="Gcy-U5-1fV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="LaoSangamMN" family="Lao Sangam MN" pointSize="25"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="0.79818600171232879" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteCurrentVideo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dqU-qv-ldj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="cji-Vr-Na5" secondAttribute="bottom" constant="20" id="3Um-ec-aNu"/>
+                            <constraint firstItem="h1S-zJ-UJv" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="9Qq-kc-BC6"/>
                             <constraint firstItem="Zvi-Hz-mw6" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="PAH-e6-mvl"/>
                             <constraint firstItem="Zvi-Hz-mw6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="PR4-Q6-3cl"/>
                             <constraint firstItem="Zvi-Hz-mw6" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="RS2-hP-doo"/>
                             <constraint firstItem="cji-Vr-Na5" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TSK-dC-QGf"/>
+                            <constraint firstItem="h1S-zJ-UJv" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="30" id="fek-aT-m6l"/>
                             <constraint firstItem="Zvi-Hz-mw6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="sbd-6G-y56"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="cameraButton" destination="cji-Vr-Na5" id="ZaB-3Q-K0W"/>
+                        <outlet property="deleteVideoButton" destination="h1S-zJ-UJv" id="i74-Mh-ldg"/>
                         <outlet property="previewView" destination="Zvi-Hz-mw6" id="BJ1-x6-9sF"/>
                     </connections>
                 </viewController>

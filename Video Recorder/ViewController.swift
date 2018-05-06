@@ -17,10 +17,20 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
 
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var previewView: UIView!
+    @IBOutlet var deleteVideoButton: UIButton!
+    
     
     var session = AVCaptureSession()
     var videoOutput = AVCaptureMovieFileOutput()
     var previewLayer: AVCaptureVideoPreviewLayer?
+    
+    var playbackLayer: AVPlayerLayer?
+    var videoPlayer: AVPlayer?
+    
+    var isPlayingVideo = false
+    var currentVideoURL:URL?
+    
+    var fileManager = FileManager.default
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +60,7 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
         let backCamera = AVCaptureDevice.default(for: .video)
         let microphone = AVCaptureDevice.default(for: .audio)
         do {
+            
             
             previewLayer = AVCaptureVideoPreviewLayer(session: session)
             previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
@@ -87,15 +98,51 @@ class ViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     }
     
     func previewVideo(url: URL) {
+        
+        videoPlayer = AVPlayer(url: url)
+        
+        playbackLayer = AVPlayerLayer(player: videoPlayer)
+        playbackLayer?.frame = previewView.bounds
+        previewView.layer.addSublayer(playbackLayer!)
+        
+        
+        videoPlayer?.play()
+        currentVideoURL = url
+        self.deleteVideoButton.isHidden = false
+        
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: videoPlayer?.currentItem, queue: .main) { _ in
+            self.videoPlayer?.seek(to: kCMTimeZero)
+            self.videoPlayer?.play()
+        }
+        
         NSLog("Started video preview - url: \(url)")
     }
     
+    @IBAction func deleteCurrentVideo(_ sender: Any) {
+        
+        playbackLayer?.removeFromSuperlayer()
+        videoPlayer?.pause()
+        
+        do {
+            
+            try fileManager.removeItem(at: currentVideoURL!)
+            NSLog("Successfully deleted current video")
+        } catch let error as NSError {
+            
+            NSLog(error.localizedDescription)
+            
+        }
+        
+        self.isPlayingVideo = false
+        self.deleteVideoButton.isHidden = true
+    }
 
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error != nil {
             NSLog("FileOutput: \(error?.localizedDescription)")
         } else {
             self.previewVideo(url: outputFileURL)
+            self.isPlayingVideo = true
         }
     }
     
