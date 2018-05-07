@@ -106,8 +106,7 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let cell = feedCollectionView.dequeueReusableCell(withReuseIdentifier: "playerCell", for: indexPath) as! VideoCollectionViewCell
         
         let currentRow = indexPath.row
-        cell.playbackLayer.videoGravity = .resizeAspectFill
-        cell.playbackLayer.frame = cell.frame
+
         
         let currentURL = URL(fileURLWithPath: videoURLs[currentRow].0, isDirectory: false, relativeTo: documentsPath)
         let cellPlayer = AVPlayer(url: currentURL)
@@ -116,6 +115,9 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         cell.setupView()
         
+        cell.playbackLayer.videoGravity = .resizeAspectFill
+        cell.playbackLayer.frame = cell.bounds
+
         
         return cell
         
@@ -127,28 +129,21 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
         if (cell.videoPlayer?.rate)! <= Float(0) {
-            cell.videoPlayer?.play()
-            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: cell.videoPlayer?.currentItem, queue: .main) { _ in
-                cell.videoPlayer?.seek(to: kCMTimeZero)
-                cell.videoPlayer?.play()
-            }
+            cell.startVideoPlayback()
         } else {
-            cell.videoPlayer?.seek(to: kCMTimeZero)
-            cell.videoPlayer?.pause()
-            cell.isFullScreen = false
+            cell.resetVideo()
         }
     }
+
     
     
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         
-        let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
-        
-        cell.videoPlayer?.seek(to: kCMTimeZero)
-        cell.videoPlayer?.pause()
-        cell.isFullScreen = false
-        
+        if feedCollectionView.cellForItem(at: indexPath) != nil {
+            let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+            cell.resetVideo()
+        }
     }
     
     

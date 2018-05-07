@@ -16,7 +16,6 @@ class VideoCollectionViewCell: UICollectionViewCell {
     var playbackLayer = AVPlayerLayer()
     var videoPlayer: AVPlayer?
     
-    var isFullScreen = false
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -52,5 +51,19 @@ class VideoCollectionViewCell: UICollectionViewCell {
         
     }
 
+    func resetVideo() {
+        videoPlayer?.seek(to: kCMTimeZero)
+        videoPlayer?.pause()
+    }
+    
+    func startVideoPlayback() {
+        videoPlayer?.play()
+        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: videoPlayer?.currentItem, queue: .main) { _ in
+            
+            self.videoPlayer?.seek(to: kCMTimeZero)
+            self.videoPlayer?.play()
+            
+        }
+    }
     
 }
