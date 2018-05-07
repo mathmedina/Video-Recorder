@@ -10,13 +10,15 @@ import UIKit
 import AVFoundation
 import Photos
 
-class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
+class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     
     
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var previewView: UIView!
     @IBOutlet var deleteVideoButton: UIButton!
     
+    @IBOutlet var shootButton: UIButton!
+    @IBOutlet var feedButton: UIButton!
     
     var session = AVCaptureSession()
     var videoOutput = AVCaptureMovieFileOutput()
@@ -30,16 +32,24 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
     
     var fileManager = FileManager.default
     
+    var transitionManager = MenuTransitionManager()
+    
+    //MARK: View methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        transitionManager.sourceViewController = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        setupSession()
-        requestAccess()
+        if !session.isRunning {
+            self.setupSession()
+            self.requestAccess()
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -52,47 +62,48 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         // Dispose of any resources that can be recreated.
     }
     
+    
+    //Mark: Session
+    
     func setupSession() {
         
-        session.sessionPreset = .high
-        let backCamera = AVCaptureDevice.default(for: .video)
-        let microphone = AVCaptureDevice.default(for: .audio)
-        do {
-            
-            
-            previewLayer = AVCaptureVideoPreviewLayer(session: session)
-            previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
-            previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-            previewView.layer.addSublayer(previewLayer!)
-            
-            //input
-            let videoInput = try AVCaptureDeviceInput(device: backCamera!)
-            let audioInput = try AVCaptureDeviceInput(device: microphone!)
-            if session.canAddInput(videoInput) {
-                session.addInput(videoInput)
+            session.sessionPreset = .high
+            let backCamera = AVCaptureDevice.default(for: .video)
+            let microphone = AVCaptureDevice.default(for: .audio)
+            do {
+                
+                
+                previewLayer = AVCaptureVideoPreviewLayer(session: session)
+                previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
+                previewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
+                previewView.layer.addSublayer(previewLayer!)
+                
+                //input
+                let videoInput = try AVCaptureDeviceInput(device: backCamera!)
+                let audioInput = try AVCaptureDeviceInput(device: microphone!)
+                if session.canAddInput(videoInput) {
+                    session.addInput(videoInput)
+                }
+                if session.canAddInput(audioInput) {
+                    session.addInput(audioInput)
+                }
+                
+                //output
+                videoOutput.setOutputSettings([AVVideoCodecKey : AVVideoCodecType.h264], for: (previewLayer?.connection)!)
+                
+                if session.canAddOutput(videoOutput) {
+                    session.addOutput(videoOutput)
+                }
+                
+                
+                session.startRunning()
+                
+                
+                
+                
+            } catch let error as NSError {
+                NSLog(error.localizedDescription)
             }
-            if session.canAddInput(audioInput) {
-                session.addInput(audioInput)
-            }
-            
-            //output
-            videoOutput.setOutputSettings([AVVideoCodecKey : AVVideoCodecType.h264], for: (previewLayer?.connection)!)
-            
-            if session.canAddOutput(videoOutput) {
-                session.addOutput(videoOutput)
-            }
-            
-            
-            session.startRunning()
-            
-            
-            
-            
-            
-        } catch let error as NSError {
-            NSLog(error.localizedDescription)
-        }
-        
     }
     
     func previewVideo(url: URL) {
@@ -152,20 +163,21 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         updateButtons()
     }
     
-    
+    //MARK: Actions
     //TouchDown
     @IBAction func startRecording(_ sender: Any) {
         
-        if !videoOutput.isRecording {
+        if viewState == .idle {
+            if !videoOutput.isRecording {
+                
+                let outputFileName = NSUUID().uuidString
+                let documentsPath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+                let outputFilePath = documentsPath.appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
+                videoOutput.startRecording(to: outputFilePath, recordingDelegate: self)
+                
+            }
             
-            let outputFileName = NSUUID().uuidString
-            let documentsPath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
-            let outputFilePath = documentsPath.appendingPathComponent((outputFileName as NSString).appendingPathExtension("mov")!)
-            videoOutput.startRecording(to: outputFilePath, recordingDelegate: self)
-            
-        }
-        
-        if viewState == .playing {
+        } else  {
             playbackLayer?.removeFromSuperlayer()
             videoPlayer?.pause()
             viewState = .idle
@@ -199,9 +211,11 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         let idleButtonTitle = ""
         let saveButtonTitle = "SALVAR"
         
+//        let saveButtonHeight = 
         switch viewState {
             
         case .idle:
+            self.cameraButton.layer.cornerRadius = cameraButton.frame.height/2
             self.cameraButton.backgroundColor = idleButtonColor
             self.cameraButton.setTitle(idleButtonTitle, for: .normal)
             self.deleteVideoButton.isHidden = true
@@ -212,6 +226,7 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.deleteVideoButton.isHidden = true
             
         case .playing:
+            self.cameraButton.layer.cornerRadius = 0
             self.cameraButton.backgroundColor = saveButtonColor
             self.cameraButton.setTitle(saveButtonTitle, for: .normal)
             self.deleteVideoButton.isHidden = false
@@ -241,6 +256,19 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
         }
         
+    }
+    
+    @IBAction func unwindToCamera(segue: UIStoryboardSegue) {
+        performSegue(withIdentifier: "dismiss", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "presentFeed" {
+            let feed = segue.destination as! FeedViewController
+            feed.transitioningDelegate = self.transitionManager
+            feed.modalPresentationStyle = .overFullScreen
+            self.transitionManager.feedViewController = feed
+        }
     }
     
     enum CurrentViewState {

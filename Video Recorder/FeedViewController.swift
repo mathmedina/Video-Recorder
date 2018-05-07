@@ -9,23 +9,49 @@
 import UIKit
 import AVFoundation
 
-class FeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    @IBOutlet var feedTableView: UITableView!
+    @IBOutlet var feedCollectionView: UICollectionView!
+    var collectionLayout = FeedCollectionViewLayout()
+    
+    
+    
     
     let defaultManager = FileManager.default
-
+    
     var videoURLs = [URL]()
     
+    
+    
     override func viewDidLoad() {
-        super.viewDidLoad()
-
-        feedTableView.delegate = self
-        feedTableView.dataSource = self
         
-        feedTableView.register(UINib(nibName: "VideoTableViewCell", bundle: Bundle.main), forCellReuseIdentifier: "playerCell")
+        super.viewDidLoad()
+        
         
         loadVideoURLs()
+        
+        let space: CGFloat = 2
+        
+        
+        feedCollectionView.register(UINib(nibName: "VideoCollectionViewCell", bundle: Bundle.main), forCellWithReuseIdentifier: "playerCell")
+        feedCollectionView.backgroundColor = self.view.backgroundColor
+        
+        feedCollectionView.dataSource = self
+        feedCollectionView.delegate = self
+        feedCollectionView.isPagingEnabled = false
+        feedCollectionView.contentInset = UIEdgeInsets(top: 0, left: space, bottom: 0, right: space)
+        
+        collectionLayout.scrollDirection = .vertical
+        
+        feedCollectionView.allowsSelection = true
+        feedCollectionView.allowsMultipleSelection = false
+        
+        let itemWidth = view.frame.width
+        let itemHeight = view.frame.height/2
+        collectionLayout.itemSize = CGSize(width: itemWidth, height: itemHeight)
+        collectionLayout.minimumLineSpacing = space
+        
+        
         // Do any additional setup after loading the view.
     }
     
@@ -33,9 +59,9 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         super.viewWillAppear(animated)
         
         loadVideoURLs()
-        feedTableView.reloadData()
+        
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -53,47 +79,63 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return videoURLs.count
         
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        
-        let cell = feedTableView.dequeueReusableCell(withIdentifier: "playerCell") as! VideoTableViewCell
+        let cell = feedCollectionView.dequeueReusableCell(withReuseIdentifier: "playerCell", for: indexPath) as! VideoCollectionViewCell
         
         let currentRow = indexPath.row
+        cell.playbackLayer.videoGravity = .resizeAspectFill
+        cell.playbackLayer.frame = cell.frame
         
         let cellPlayer = AVPlayer(url: videoURLs[currentRow])
         cell.videoPlayer = cellPlayer
+
         
         cell.setupView()
+        
         
         return cell
         
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let cell = feedTableView.cellForRow(at: indexPath) as! VideoTableViewCell
-        if cell.isFullScreen {
-            cell.playbackLayer.frame = self.view.bounds
-        } else {
-            cell.playbackLayer.frame = cell.videoView.bounds
-        }
-        
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let frameHeight = feedTableView.frame.height
-        return frameHeight/2
-    }
-    
+
 
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+        if (cell.videoPlayer?.rate)! <= Float(0) {
+            cell.videoPlayer?.play()
+            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: cell.videoPlayer?.currentItem, queue: .main) { _ in
+                cell.videoPlayer?.seek(to: kCMTimeZero)
+                cell.videoPlayer?.play()
+            }
+        } else {
+            cell.videoPlayer?.seek(to: kCMTimeZero)
+            cell.videoPlayer?.pause()
+            cell.isFullScreen = false
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        
+        let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
+        
+        cell.videoPlayer?.seek(to: kCMTimeZero)
+        cell.videoPlayer?.pause()
+        cell.isFullScreen = false
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "dismiss" {
+            let destination = segue.destination as! CameraViewController
+
+        }
     }
 }

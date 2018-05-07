@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoCollectionViewCell" customModule="Video_Recorder" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="playerCell" id="GjZ-eD-2fG" customClass="VideoCollectionViewCell" customModule="Video_Recorder" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="155"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="155"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LVi-n7-djD">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="155"/>
+                        <color key="backgroundColor" red="0.8844186230964467" green="0.8844186230964467" blue="0.8844186230964467" alpha="0.70673694349315064" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="LVi-n7-djD" firstAttribute="top" secondItem="GjZ-eD-2fG" secondAttribute="top" id="1E7-mn-RYO"/>
+                <constraint firstItem="LVi-n7-djD" firstAttribute="leading" secondItem="GjZ-eD-2fG" secondAttribute="leading" id="WxB-sd-6cg"/>
+                <constraint firstAttribute="trailing" secondItem="LVi-n7-djD" secondAttribute="trailing" id="a7I-Bu-6ZL"/>
+                <constraint firstAttribute="bottom" secondItem="LVi-n7-djD" secondAttribute="bottom" id="aQj-vS-u33"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="3Bp-RL-VJ3"/>
+            <size key="customSize" width="375" height="155"/>
+            <connections>
+                <outlet property="videoView" destination="LVi-n7-djD" id="ewN-LK-ciU"/>
+            </connections>
+            <point key="canvasLocation" x="102.5" y="56.5"/>
+        </collectionViewCell>
+    </objects>
+</document>
