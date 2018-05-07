@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Gpe-dC-EtH">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,23 +10,32 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Feed View Controller-->
         <scene sceneID="7SW-Mw-fGp">
             <objects>
-                <viewController id="Gpe-dC-EtH" sceneMemberID="viewController">
+                <viewController id="Gpe-dC-EtH" customClass="FeedViewController" customModule="Video_Recorder" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WCo-Op-bvw">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3U8-qF-mNA">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3U8-qF-mNA">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <sections/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="3U8-qF-mNA" firstAttribute="leading" secondItem="bny-K1-oND" secondAttribute="leading" id="8IP-a5-wWY"/>
+                            <constraint firstItem="3U8-qF-mNA" firstAttribute="trailing" secondItem="bny-K1-oND" secondAttribute="trailing" id="Cef-71-G63"/>
+                            <constraint firstItem="3U8-qF-mNA" firstAttribute="top" secondItem="bny-K1-oND" secondAttribute="top" id="YGK-9S-fEj"/>
+                            <constraint firstItem="3U8-qF-mNA" firstAttribute="bottom" secondItem="bny-K1-oND" secondAttribute="bottom" id="wq9-fI-oR3"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="bny-K1-oND"/>
                     </view>
+                    <connections>
+                        <outlet property="feedTableView" destination="3U8-qF-mNA" id="23X-ws-mqe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SWz-fW-pxd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

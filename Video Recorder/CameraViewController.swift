@@ -13,8 +13,6 @@ import Photos
 class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelegate {
     
     
-    
-    
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var previewView: UIView!
     @IBOutlet var deleteVideoButton: UIButton!
