@@ -46,6 +46,9 @@
                                 <state key="normal" title="Shoot">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="0.74898330479999997" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="segueToCamera:" destination="Gpe-dC-EtH" eventType="touchUpInside" id="Ct7-vW-eZD"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -101,9 +104,9 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="cancelRecording:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="zRl-wl-FAM"/>
-                                    <action selector="startRecording:" destination="BYZ-38-t0r" eventType="touchDown" id="CPa-7W-U28"/>
-                                    <action selector="stopRecording:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xC1-ys-ETb"/>
+                                    <action selector="recordingTouchDown:" destination="BYZ-38-t0r" eventType="touchDown" id="UrJ-B4-Klw"/>
+                                    <action selector="recordingTouchUpInside:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ijd-zI-zSS"/>
+                                    <action selector="recordingTouchUpOutside:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="r3B-M1-k8j"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h1S-zJ-UJv">

@@ -13,26 +13,34 @@ import Photos
 class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelegate{
     
     
+    
     @IBOutlet var cameraButton: UIButton!
     @IBOutlet var previewView: UIView!
     @IBOutlet var deleteVideoButton: UIButton!
     
+    
     @IBOutlet var shootButton: UIButton!
     @IBOutlet var feedButton: UIButton!
+    
     
     var session = AVCaptureSession()
     var videoOutput = AVCaptureMovieFileOutput()
     var previewLayer: AVCaptureVideoPreviewLayer?
     
+    
     var playbackLayer: AVPlayerLayer?
     var videoPlayer: AVPlayer?
+    
     
     var viewState = CurrentViewState.idle
     var currentVideoURL:URL?
     
+    
     var fileManager = FileManager.default
     
+    
     var transitionManager = MenuTransitionManager()
+    
     
     //MARK: View methods
     
@@ -43,6 +51,9 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         transitionManager.sourceViewController = self
     }
     
+    
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -52,10 +63,14 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         previewLayer?.frame = previewView.bounds
     }
+    
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -106,6 +121,8 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             }
     }
     
+    
+    
     func previewVideo(url: URL) {
         
         videoPlayer = AVPlayer(url: url)
@@ -127,6 +144,8 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         NSLog("Started video preview - url: \(url)")
     }
     
+    
+    
     @IBAction func deleteCurrentVideo(_ sender: Any) {
         
         playbackLayer?.removeFromSuperlayer()
@@ -147,6 +166,8 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         updateButtons()
     }
     
+    
+    
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
         if error != nil {
             NSLog("FileOutput: \(error?.localizedDescription)")
@@ -157,15 +178,18 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         }
     }
     
+    
+    
     func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
         NSLog("Started recording to \(fileURL)")
         viewState = .recording
         updateButtons()
     }
     
+    
     //MARK: Actions
     //TouchDown
-    @IBAction func startRecording(_ sender: Any) {
+    @IBAction func recordingTouchDown(_ sender: Any) {
         
         if viewState == .idle {
             if !videoOutput.isRecording {
@@ -187,19 +211,25 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         NSLog("Start recording (TouchDown)")
     }
     
+    
+    
     //TouchUpOutside
-    @IBAction func cancelRecording(_ sender: Any) {
+    @IBAction func recordingTouchUpOutside(_ sender: Any) {
         NSLog("Cancel recording (TouchUpOutside)")
         videoOutput.stopRecording()
         updateButtons()
     }
     
+    
+    
     //TouchUpInside
-    @IBAction func stopRecording(_ sender: Any) {
+    @IBAction func recordingTouchUpInside(_ sender: Any) {
         NSLog("Stop recording (TouchUpInside)")
         videoOutput.stopRecording()
         updateButtons()
     }
+    
+    
     
     func updateButtons() {
         
@@ -230,9 +260,11 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.cameraButton.backgroundColor = saveButtonColor
             self.cameraButton.setTitle(saveButtonTitle, for: .normal)
             self.deleteVideoButton.isHidden = false
+            
         }
-        
     }
+    
+    
     
     func requestAccess() {
         
@@ -258,9 +290,13 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
         
     }
     
+    
+    
     @IBAction func unwindToCamera(segue: UIStoryboardSegue) {
         performSegue(withIdentifier: "dismiss", sender: self)
     }
+    
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "presentFeed" {
@@ -270,6 +306,8 @@ class CameraViewController: UIViewController, AVCaptureFileOutputRecordingDelega
             self.transitionManager.feedViewController = feed
         }
     }
+    
+    
     
     enum CurrentViewState {
         case idle

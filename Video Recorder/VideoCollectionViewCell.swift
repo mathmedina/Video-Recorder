@@ -24,24 +24,6 @@ class VideoCollectionViewCell: UICollectionViewCell {
         
     }
 
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//
-//        if selected && (videoPlayer?.rate)! <= Float(0) {
-//            self.videoPlayer?.play()
-//            self.isFullScreen = true
-//            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: videoPlayer?.currentItem, queue: .main) { _ in
-//                self.videoPlayer?.seek(to: kCMTimeZero)
-//                self.videoPlayer?.play()
-//            }
-//        } else {
-//            self.videoPlayer?.seek(to: kCMTimeZero)
-//            self.videoPlayer?.pause()
-//            self.isFullScreen = false
-//        }
-//
-//    }
-
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,6 +37,8 @@ class VideoCollectionViewCell: UICollectionViewCell {
     
     func setupView() {
         
+        let cellBorderWidth:CGFloat = 1.0
+        
         playbackLayer.videoGravity = .resizeAspectFill
         playbackLayer.frame = videoView.frame
         
@@ -62,7 +46,7 @@ class VideoCollectionViewCell: UICollectionViewCell {
         
         videoView.layer.addSublayer(playbackLayer)
         
-        self.layer.borderWidth  = 1.0
+        self.layer.borderWidth  = cellBorderWidth
         self.layer.borderColor  = UIColor.white.cgColor
         self.backgroundColor    = UIColor.white
         

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8684C4C3209F852E003FCA36 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C4C2209F852E003FCA36 /* PreviewView.swift */; };
 		8684C4C5209FB34F003FCA36 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C4C4209FB34F003FCA36 /* FeedViewController.swift */; };
 		8684C4C8209FBC0E003FCA36 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C4C6209FBC0E003FCA36 /* VideoCollectionViewCell.swift */; };
 		8684C4CB209FF42F003FCA36 /* FeedCollectionViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8684C4CA209FF42F003FCA36 /* FeedCollectionViewLayout.swift */; };
@@ -22,7 +21,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8684C4C2209F852E003FCA36 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		8684C4C4209FB34F003FCA36 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		8684C4C6209FBC0E003FCA36 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		8684C4CA209FF42F003FCA36 /* FeedCollectionViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCollectionViewLayout.swift; sourceTree = "<group>"; };
@@ -71,7 +69,6 @@
 				86E2F504209DFEC70003E128 /* AppDelegate.swift */,
 				86E2F506209DFEC70003E128 /* CameraViewController.swift */,
 				86E2F508209DFEC70003E128 /* Main.storyboard */,
-				8684C4C2209F852E003FCA36 /* PreviewView.swift */,
 				86E2F50E209DFEC80003E128 /* Assets.xcassets */,
 				86E2F510209DFEC80003E128 /* LaunchScreen.storyboard */,
 				86E2F513209DFEC80003E128 /* Info.plist */,
@@ -159,7 +156,6 @@
 			files = (
 				86E2F50D209DFEC70003E128 /* Video_Recorder.xcdatamodeld in Sources */,
 				86D2EFD020A06FEB0001A88A /* MenuTransitionManager.swift in Sources */,
-				8684C4C3209F852E003FCA36 /* PreviewView.swift in Sources */,
 				8684C4CB209FF42F003FCA36 /* FeedCollectionViewLayout.swift in Sources */,
 				8684C4C5209FB34F003FCA36 /* FeedViewController.swift in Sources */,
 				86E2F507209DFEC70003E128 /* CameraViewController.swift in Sources */,

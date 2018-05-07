@@ -13,8 +13,6 @@ class FeedCollectionViewLayout: UICollectionViewFlowLayout {
     var previousOffset: CGFloat    = 0
     var currentPage: Int           = 0
     
-    override func prepare() {
-    }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         

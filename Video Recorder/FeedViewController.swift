@@ -11,22 +11,23 @@ import AVFoundation
 
 class FeedViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    
     @IBOutlet var feedCollectionView: UICollectionView!
     var collectionLayout = FeedCollectionViewLayout()
     
     
-    
-    
     let defaultManager = FileManager.default
     
-    var videoURLs = [URL]()
+    var documentsPath: URL?
     
+    var videoURLs = [(String, Date)]()
     
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
+        documentsPath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
         
         loadVideoURLs()
         
@@ -55,6 +56,8 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         // Do any additional setup after loading the view.
     }
     
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -62,28 +65,41 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
     }
     
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
+    
+    
     func loadVideoURLs() {
         
-        let documentsPath = URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])
+
         
         do {
-            try videoURLs = defaultManager.contentsOfDirectory(at: documentsPath, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            let urls = try defaultManager.contentsOfDirectory(at: documentsPath!, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
+            videoURLs = urls.map { url in
+                (url.lastPathComponent, (try? url.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? Date.distantPast)
+                }
+                .sorted(by: { $0.1 > $1.1 })
+            
         } catch let error as NSError {
             NSLog(error.localizedDescription)
         }
         
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return videoURLs.count
         
     }
+    
+    
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -93,7 +109,8 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         cell.playbackLayer.videoGravity = .resizeAspectFill
         cell.playbackLayer.frame = cell.frame
         
-        let cellPlayer = AVPlayer(url: videoURLs[currentRow])
+        let currentURL = URL(fileURLWithPath: videoURLs[currentRow].0, isDirectory: false, relativeTo: documentsPath)
+        let cellPlayer = AVPlayer(url: currentURL)
         cell.videoPlayer = cellPlayer
 
         
@@ -122,6 +139,8 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         }
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         
         let cell = feedCollectionView.cellForItem(at: indexPath) as! VideoCollectionViewCell
@@ -132,10 +151,12 @@ class FeedViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "dismiss" {
-            let destination = segue.destination as! CameraViewController
-
-        }
+    
+    
+    @IBAction func segueToCamera(_ sender: Any) {
+        performSegue(withIdentifier: "dismiss", sender: self)
     }
+    
+    
+    
 }
