@@ -12,14 +12,12 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     fileprivate var presenting = false
     fileprivate var interactive = false
     
-    fileprivate var enterPanGesture: UIScreenEdgePanGestureRecognizer!
+    fileprivate var enterPanGesture: UIPanGestureRecognizer!
     
     var sourceViewController: CameraViewController! {
         didSet {
-            self.enterPanGesture = UIScreenEdgePanGestureRecognizer()
-            self.enterPanGesture.addTarget(self, action:#selector(handleOnstagePan
-                ))
-            self.enterPanGesture.edges = UIRectEdge.left
+            self.enterPanGesture = UIPanGestureRecognizer()
+            self.enterPanGesture.addTarget(self, action:#selector(handleOnstagePan))
             self.sourceViewController.view.addGestureRecognizer(self.enterPanGesture)
             
             
@@ -155,7 +153,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
             if(transitionContext.transitionWasCancelled){
                 
                 transitionContext.completeTransition(false)
-                // bug: we have to manually add our 'to view' back http://openradar.appspot.com/radar?id=5320103646199808
+                
                 UIApplication.shared.keyWindow!.addSubview(screens.from.view)
                 
             }
@@ -203,7 +201,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     // MARK: UIViewControllerTransitioningDelegate protocol methods
     
     // return the animator when presenting a viewcontroller
-    // rememeber that an animator (or animation controller) is any object that aheres to the UIViewControllerAnimatedTransitioning protocol
+    // remember that an animator (or animation controller) is any object that aheres to the UIViewControllerAnimatedTransitioning protocol
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         self.presenting = true
         return self
